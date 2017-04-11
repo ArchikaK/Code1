@@ -1,0 +1,40 @@
+library(shiny)
+library(shinydashboard)
+dashboardPage(  
+  dashboardHeader(title = "BT Campaign"),    
+  dashboardSidebar(width = 200,                    
+    selectInput("typeMembership",                                
+      label = em("Select Proposition",style="text-align:center;color:#FFA319;font-size:100%"),                               
+       unique(outcome_data$Membership),selected = 'Premier'),                                       
+      #radioButtons("typeChannel", "Channel", choices = c("DM", "EMAIL"), selected = "DM"),                                      
+      checkboxGroupInput("typeChannel", "Channel", c("DM", "EMAIL")),                                      
+      # selectInput("typeChannel",                    
+      # label = em("Select Channel",style="text-align:center;color:#FFA319;font-size:100%"),                   
+      #             unique(outcome_data$Channel),selected = "DM"),                                      
+      selectInput('typeDecile',em('Choose Decile',style="text-align:center;color:#FFA319;font-size:100%"),                               
+      unique(outcome_data$Decile),selected = "1"),                                      
+      selectInput('typeSegment',em('Choose Segment',style="text-align:center;color:#FFA319;font-size:100%"),                               
+      unique(outcome_data$Segment),selected = "Spender")   ),    
+      
+      dashboardBody(    
+      fluidRow(            
+        valueBoxOutput("LeadsBox"),            
+        valueBoxOutput("RespondersBox"),            
+        valueBoxOutput("BTBox")    ),        
+      fluidRow(      
+        valueBox("Performance", "", color = "blue", width = 250)    ),        
+        fluidRow(      
+          tabBox(        title = "Channel Performance", width = 4,        
+          # The id lets us use input$tabset1 on the server to find the current tab        
+            id = "tabset1",        
+            tabPanel("Tab1", plotOutput("plot1", height = 250)),        
+            tabPanel("Tab2", "Tab content 2")                
+            #title = "Channel Performance", status = "primary", solidHeader = TRUE, width = 4,        
+            #collapsible = TRUE,        #plotOutput("plot1", height = 250)      ),           
+            box(        title = "Card Type", status = "warning", solidHeader = TRUE, width = 4,        collapsible = TRUE,        plotOutput("plot2", height = 250)      ),            
+            box(        title = "Response Model", status = "warning", solidHeader = TRUE, width = 4,        
+            collapsible = TRUE,        
+            plotOutput("plot3", height = 250)      )      
+            # Clicking this will increment the progress amount      
+            #box(width = 4, actionButton("count", "Increment progress"))    )  
+            ))
