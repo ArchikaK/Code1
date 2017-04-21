@@ -1,10 +1,18 @@
 
 library(shiny)
-library(shinydashboard)
-library(magrittr)
 library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(dygraphs)
+library(xts)
+library(DT)
+
 
 outcome_data=read.csv("C:/Users/Archika Kaushik/Documents/BT_data.csv",stringsAsFactors = F) 
+outcome_data1=read.csv("C:/Users/44041399/Documents/BT_Time_Series.csv",stringsAsFactors = F)
+#abc<- as.Date(outcome_data1$Date, "%m/%d/%y")
+date1 = seq(Sys.Date() - 145, Sys.Date(), 1)
+df1<-data.frame(outcome_data1,date1)
 
 shinyServer(function(input, output)   
   {      
@@ -22,17 +30,17 @@ shinyServer(function(input, output)
   
     output$LeadsBox <- renderValueBox({
       
-      valueBox(sum(filtered1()$Leads), "Leads", icon = icon("list"), color = "purple")   
+      valueBox(format(sum(filtered1()$Leads), big.mark = ","), "Leads", icon = icon("user", lib = "glyphicon"), color = "yellow")  
     })    
   
   output$RespondersBox <- renderValueBox({
    
-    valueBox(sum(filtered1()$Responders), "Responders", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow") 
-    })    
+    valueBox(format(sum(filtered1()$Responders), big.mark = ",") , "Responders", icon = icon("credit-card", lib = "glyphicon"), color = "teal") 
+    })   #red, yellow, aqua, blue, light-blue, green, navy, teal, olive, lime, orange, fuchsia, purple, maroon, black 
   
   output$BTBox <- renderValueBox({  
     
-    valueBox(sum(filtered1()$Amount), "Balance Transfers", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow")  
+    valueBox(paste("$", format(ceiling(sum(filtered1()$Amount)), big.mark = ",")), "Balance Transfers", icon = icon("thumbs-up", lib = "glyphicon"), color = "olive") 
     })    
   
   output$plot1 <- renderPlot({  
@@ -49,4 +57,21 @@ shinyServer(function(input, output)
     data <- histdata[seq_len(input$slider)]    
     hist(data)  
     })
+  output$plot <- renderDygraph({
+        timeSeriesData <- xts(df1[,"Responders"], 
+                                order.by = df1$date1)       
+        timeSeriesData %>%      
+          dygraph() %>%      
+            dyHighlight(hideOnMouseOut = TRUE) %>%      
+            dyOptions(labelsKMB = TRUE,    
+            gridLineColor = 'lightgrey',     
+            colors = 'red',      
+            animatedZooms = TRUE,   
+            rightGap = 20    
+            ) %>%      
+           dyRangeSelector(dateWindow = c(Sys.Date() - 90, Sys.Date() + 1))      
+     })  
+     
+     #output$results <- renderTable({ filtered1() })
+    
   }) 
