@@ -57,6 +57,12 @@ dashboardPage(
       
       # Clicking this will increment the progress amount  
       #box(width = 4, actionButton("count", "Increment progress"))  
-      )  
+      ),
+      
+      fluidRow(   
+        box(title = "Time Series", width = 12, collapsible = TRUE,     
+          dygraphOutput('plot')  
+          ))    
+     #,fluidRow(tableOutput("results"))
     )
   )
