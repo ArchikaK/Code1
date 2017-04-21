@@ -1,0 +1,52 @@
+
+library(shiny)
+library(shinydashboard)
+library(magrittr)
+library(dplyr)
+
+outcome_data=read.csv("C:/Users/Archika Kaushik/Documents/BT_data.csv",stringsAsFactors = F) 
+
+shinyServer(function(input, output)   
+  {      
+
+  filtered1 <- reactive({
+    if (is.null(input$typeMembership)) {
+      return(NULL)
+    }
+    outcome_data %>%    
+    filter(CardType %in% input$typeMembership,  
+           Channel %in% input$typeChannel,  
+           Decile %in% input$typeDecile,  
+           Segment %in% input$typeSegment) 
+  })
+  
+    output$LeadsBox <- renderValueBox({
+      
+      valueBox(sum(filtered1()$Leads), "Leads", icon = icon("list"), color = "purple")   
+    })    
+  
+  output$RespondersBox <- renderValueBox({
+   
+    valueBox(sum(filtered1()$Responders), "Responders", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow") 
+    })    
+  
+  output$BTBox <- renderValueBox({  
+    
+    valueBox(sum(filtered1()$Amount), "Balance Transfers", icon = icon("thumbs-up", lib = "glyphicon"), color = "yellow")  
+    })    
+  
+  output$plot1 <- renderPlot({  
+    data <- histdata[seq_len(input$slider)]    
+    hist(data)  
+    })  
+  
+  output$plot2 <- renderPlot({  
+    data <- histdata[seq_len(input$slider)] 
+    hist(data)  
+    })  
+  
+  output$plot3 <- renderPlot({
+    data <- histdata[seq_len(input$slider)]    
+    hist(data)  
+    })
+  }) 
