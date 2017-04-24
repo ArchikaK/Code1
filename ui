@@ -22,9 +22,10 @@ dashboardPage(
   
   dashboardBody(  
     fluidRow(   
-      valueBoxOutput("LeadsBox"),
-      valueBoxOutput("RespondersBox"),  
-      valueBoxOutput("BTBox")    
+      tags$head(tags$style(HTML(".small-box {height: 50px}"))),
+      valueBoxOutput("outputId = LeadsBox"),
+      valueBoxOutput("outputId = RespondersBox"),  
+      valueBoxOutput("outputId = BTBox")    
       ),      
     
     fluidRow(     
