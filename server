@@ -28,6 +28,8 @@ shinyServer(function(input, output)
            Segment %in% input$typeSegment) 
   })
   
+    card_type <- reactive({    if (is.null(input$typeChannel)) { return(NULL)}
+    spread(outcome_data %>%      filter(Channel %in% input$typeChannel,             Decile %in% input$typeDecile,             Segment %in% input$typeSegment) %>%                select(Membership, Group, Leads) %>%                  group_by(Membership, Group) %>%                    summarise(Amt=sum(Leads)), Group, Amt)
     output$LeadsBox <- renderValueBox({
       
       valueBox(format(sum(filtered1()$Leads), big.mark = ","), "Leads", icon = icon("user", lib = "glyphicon"), color = "yellow")  
@@ -43,6 +45,8 @@ shinyServer(function(input, output)
     valueBox(paste("$", format(ceiling(sum(filtered1()$Amount)), big.mark = ",")), "Balance Transfers", icon = icon("thumbs-up", lib = "glyphicon"), color = "olive") 
     })    
   
+    output$CardTypePlot <- renderPlotly({        plot_ly(card_type(), x=card_type()$Membership, y=card_type()$CTRL, name="Ctrl", height = 200) %>%      add_trace(y= card_type()$TEST, name="Test") %>%        layout(yaxis= list(title="Leads", barmode='group'))  })
+    
   output$plot1 <- renderPlot({  
     data <- histdata[seq_len(input$slider)]    
     hist(data)  
