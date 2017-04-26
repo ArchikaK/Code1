@@ -43,6 +43,7 @@ dashboardPage(
         #collapsible = TRUE,        
         #plotOutput("plot1", height = 250)      
         ),            
+      box(        title = "Card Type", status = "warning", solidHeader = TRUE, width = 4, height = 260,        collapsible = TRUE,        plotlyOutput("CardTypePlot")      ),
       
       box(        
         title = "Card Type", status = "warning", solidHeader = TRUE, width = 4,       
