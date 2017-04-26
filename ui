@@ -65,6 +65,7 @@ dashboardPage(
         box(title = "Time Series", width = 12, collapsible = TRUE,     
           dygraphOutput('plot')  
           ))    
-     #,fluidRow(tableOutput("results"))
+     #,fluidRow(tableOutput("results")
+      #,gaugeOutput("TypeGauge"))
     )
   )
